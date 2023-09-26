@@ -1,13 +1,13 @@
 # argocd-setup
 
-This is an __EXAMPLE(!) ArgoCD setup, extended with user defined configurations__.
+This is an __EXAMPLE(!) ArgoCD setup__, extended with user defined configurations.
 
 Custom configurations:
 
 - ArgoCD is configured to use [Keycloak for authentication](https://argo-cd.readthedocs.io/en/stable/operator-manual/user-management/keycloak).
 - Feature [Applications in any namespace](https://argo-cd.readthedocs.io/en/stable/operator-manual/app-any-namespace) is enabled in configurations.
 - Repository includes 3 "root" apps named __argocd__, __apps__, __projects__ (kind: Application).\
-  __apps__ uses the [App of Apps](https://argo-cd.readthedocs.io/en/stable/operator-manual/cluster-bootstrapping) pattern to bootstrap the cluster.
+  __argocd__ and __apps__ use the [App of Apps](https://argo-cd.readthedocs.io/en/stable/operator-manual/cluster-bootstrapping) pattern to bootstrap the cluster.
 
   ![argocd](./argocd_root_apps.png)
 
