@@ -1,0 +1,25 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: argocd-cm
+  labels:
+    app.kubernetes.io/name: argocd-cm
+    app.kubernetes.io/part-of: argocd
+data:
+  # NB! restart argocd services when changing these
+  #   kubectl rollout restart -n argocd deployment argocd-server
+  #   kubectl rollout restart -n argocd statefulset argocd-application-controller
+  application.resourceTrackingMethod: annotation+label # required for "apps in all namespaces" feature
+  helm.enabled: 'true'
+  jsonnet.enabled: 'true'
+  kustomize.enabled: 'true'
+  # An optional user-defined banner message that's displayed at the top of every UI page.
+  # Every time this is updated, it will clear a user's localStorage telling the UI to hide the banner forever.
+  ui.bannercontent: "NB! Please commit any changes done in UI to git for persistence (click link) !"
+  # Optional link for banner. If set, the entire banner text will become a link.
+  # You can have bannercontent without a bannerurl, but not the other way around.
+  ui.bannerurl: "https://github.com/villisco"
+  # banner position: "bottom" or "top" (default)
+  ui.bannerposition: "top"
+  # permanent removes the option to close banner (button)
+  ui.bannerpermanent: "true"

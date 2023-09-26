@@ -1,0 +1,9 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argocd
+spec:
+  source:
+    path: overlays/dev
+    repoURL: https://github.com/villisco/argocd-setup.git
+    targetRevision: HEAD

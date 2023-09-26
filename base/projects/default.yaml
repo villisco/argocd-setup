@@ -1,0 +1,15 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: default
+  namespace: argocd
+spec:
+  description: This project is (re)created by running argocd install. By default it has every possible deploy permission.
+  clusterResourceWhitelist:
+    # deny creating any cluster resources
+    - group: ''
+      kind: ''
+  namespaceResourceWhitelist:
+    # deny creating resources in namespaces
+    - group: ''
+      kind: ''

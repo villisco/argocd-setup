@@ -1,0 +1,8 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: argocd-cmd-params-cm
+data:
+  # Namespaces list where "kind: Application" (CR) is allowed to be managed.
+  #
+  application.namespaces: argocd, namespace1, namespace2, namespace3

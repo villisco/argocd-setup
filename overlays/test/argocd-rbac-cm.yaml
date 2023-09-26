@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-rbac-cm
+data:
+  # Default role that would be applied to everyone
+  # NB! This access cannot be blocked by a deny rule.
+  # Currently disabled:
+  # User will not see anything in ArgoCD until admin adds him into some existing Group.
+  #policy.default: role:readonly
+  # groups are mapped to user in Keycloak
+  # "ArgoCDAdmins" - group that gives ArgoCD admin access (can be LDAP group as well)
+  policy.csv: |
+    g, ArgoCDAdmins, role:admin

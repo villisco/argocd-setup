@@ -1,0 +1,90 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: argocd
+
+resources:
+- namespace.yaml
+# argocd "normal" install
+# NB! change the version in urls to upgrade argocd setups
+- https://raw.githubusercontent.com/argoproj/argo-cd/v2.8.4/manifests/install.yaml
+# Add ArgoCD kubernetes cluster RBAC to allow "Applications in any namespace"
+# Read more: https://argo-cd.readthedocs.io/en/stable/operator-manual/app-any-namespace/#adapt-kubernetes-rbac
+- https://raw.githubusercontent.com/argoproj/argo-cd/v2.8.4/examples/k8s-rbac/argocd-server-applications/argocd-server-rbac-clusterrole.yaml
+- https://raw.githubusercontent.com/argoproj/argo-cd/v2.8.4/examples/k8s-rbac/argocd-server-applications/argocd-server-rbac-clusterrolebinding.yaml
+# Restricting default project + created new project "argocd" for root apps
+- projects/argocd.yaml
+- projects/default.yaml
+# repositories secrets for apps
+# NB! convert secrets with "sealed secrets" first
+#- secrets/repo-argocd.yaml
+#- secrets/repo-apps.yaml
+#
+# "argocd" app that syncs changes from this repo
+- apps/argocd.yaml
+# "projects" app that syncs changes from "argocd-projects" repo
+- apps/projects.yaml
+# "app of apps" - syncs all other apps/projects defined in "argocd-apps" repo
+- apps/apps.yaml
+
+patches:
+- path: configmaps/argocd-cm.yaml
+- path: configmaps/argocd-cmd-params-cm.yaml
+- path: configmaps/argocd-tls-certs-cm.yaml
+- path: configmaps/argocd-rbac-cm.yaml
+- path: services/argocd-server.yaml
+# OPTIONAL: Add filebeat annotations for auto scraping logs from kubernetes
+- target:
+    kind: Deployment
+  patch: |-
+    - op: add
+      path: /spec/template/metadata/annotations
+      value:
+        co.elastic.logs/enabled: "true"
+        co.elastic.logs/json: "true"
+- target:
+    kind: StatefulSet
+  patch: |-
+    - op: add
+      path: /spec/template/metadata/annotations
+      value:
+        co.elastic.logs/enabled: "true"
+        co.elastic.logs/json: "true"
+# OPTIONAL: Add prometheus annotations for metrics scraping
+# https://argo-cd.readthedocs.io/en/latest/operator-manual/metrics/
+# service: "argocd-metrics" (8082) -> argocd-application-controller (8082)
+- target:
+    kind: StatefulSet
+    name: argocd-application-controller
+  patch: |-
+    - op: add
+      path: /spec/template/metadata/annotations
+      value:
+        prometheus.io/scrape: "true"
+        prometheus.io.scheme: "https"
+        prometheus.io/path: "/metrics"
+        prometheus.io/port: "8082"
+# service: "argocd-server-metrics" (8083) -> argocd-server (8083)
+- target:
+    kind: Deployment
+    name: argocd-server
+  patch: |-
+    - op: add
+      path: /spec/template/metadata/annotations
+      value:
+        prometheus.io/scrape: "true"
+        prometheus.io.scheme: "https"
+        prometheus.io/path: "/metrics"
+        prometheus.io/port: "8083"
+# service: argocd-repo-server (8084) -> argocd-repo-server (8084)
+- target:
+    kind: Deployment
+    name: argocd-repo-server
+  patch: |-
+    - op: add
+      path: /spec/template/metadata/annotations
+      value:
+        prometheus.io/scrape: "true"
+        prometheus.io.scheme: "https"
+        prometheus.io/path: "/metrics"
+        prometheus.io/port: "8084"

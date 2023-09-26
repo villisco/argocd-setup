@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: argocd
+  namespace: argocd
+spec:
+  description: More restricted replacement for the "default" project. Used by root apps (argocd, apps) for selfsync.
+  clusterResourceWhitelist:
+    # resources allowed to be craeted in namespace ('*' means all)
+    # PS. ArgoCD install/update creates many different Custom Resources.
+    - group: '*'
+      kind: '*'
+  namespaceResourceWhitelist:
+    # resources allowed to be craeted in namespace ('*' means all)
+    - group: '*'
+      kind: '*'
+  destinations:
+    # allowed deploy destinations (local cluster used here)
+    # NB! The "apps" application deploys other (kind: Application) CR's to different namespaces.
+    - namespace: '*'
+      server: https://kubernetes.default.svc
+  sourceRepos:
+    # allowed source repos
+    - https://github.com/villisco/argocd-setup.git # used by app: argocd
+    - https://github.com/villisco/argocd-projects.git # used by app: projects
+    - https://github.com/villisco/argocd-apps.git # used by app: apps (sync all other application defintions)

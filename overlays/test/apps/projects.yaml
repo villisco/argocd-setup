@@ -1,0 +1,9 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: projects
+spec:
+  source:
+    path: overlays/test
+    repoURL: https://github.com/villisco/argocd-projects.git
+    targetRevision: HEAD

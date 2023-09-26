@@ -1,0 +1,23 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: argocd-server
+  labels:
+    app.kubernetes.io/component: server
+    app.kubernetes.io/name: argocd-server
+    app.kubernetes.io/part-of: argocd
+spec:
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 8080
+      nodePort: 30255 # NB! Used by ingress/LB - do not change once configured!
+    - name: https
+      protocol: TCP
+      port: 443
+      targetPort: 8080
+      nodePort: 30256 # NB! Used by ingress/LB - do not change once configured!
+  selector:
+    app.kubernetes.io/name: argocd-server
+  type: NodePort
