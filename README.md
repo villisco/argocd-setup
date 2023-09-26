@@ -9,6 +9,8 @@ Custom configurations:
 - Repository includes 3 "root" apps named __argocd__, __apps__, __projects__ (kind: Application).\
   Root apps use the [App of Apps](https://argo-cd.readthedocs.io/en/stable/operator-manual/cluster-bootstrapping) pattern to bootstrap the cluster.
 
+  ![argocd](./argocd_root_apps.png)
+
 __Kustomize__ is used to patch the base files over with environment specific configs.\
 For local testing get the kustomize tool from https://kustomize.io
 
