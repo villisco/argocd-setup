@@ -21,6 +21,10 @@ Splitting up the repositories provides option to manage permissions separately.
 - https://github.com/villisco/argocd-apps - sync source for __apps__ (kind: Application)
 - https://github.com/villisco/argocd-projects - sync source for __projects__ (kind: Application)
 
+Process flowchart:\
+![argocd](./add_app_flow.png)
+
+
 ## Repository structure
 
 ```
